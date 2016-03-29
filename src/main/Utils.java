@@ -4,7 +4,7 @@ import javafx.geometry.Point3D;
 
 public class Utils {
 	
-	static boolean DEBUG = true;
+	static boolean DEBUG = false;
 	
 	/**
 	 * @param s - Scheitelpunkt
