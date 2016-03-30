@@ -4,7 +4,7 @@ import javafx.geometry.Point3D;
 
 public class Utils {
 	
-	static boolean DEBUG = false;
+	public static boolean DEBUG = false;
 	
 	/**
 	 * @param s - Scheitelpunkt
@@ -26,6 +26,10 @@ public class Utils {
 		Point3D v2 = getVector(s, p2);
 		
 		double value = getScalar(v1, v2) / (getLength(v1) * getLength(v2));
+		
+		// Rundungsfehler korrigieren
+		if(value < -1) value = -1;
+		if(value > 1) value = 1;
 		
 		// cos^-1(value) berechnen
 		double radian = Math.acos(value);
@@ -70,10 +74,10 @@ public class Utils {
 	 * @param pA - Punkt A des Dreiecks
 	 * @param pB - Punkt B des Dreiecks
 	 * @param pC - Punkt C des Dreiecks
-	 * @param punkt - Punkt zum Ueberpruefen
+	 * @param p - Punkt zum Ueberpruefen
 	 * @return boolean
 	 */
-	public static boolean liegtPunktInDreieck(Point3D pA, Point3D pB, Point3D pC, Point3D p) {
+	public static boolean liegtPunktImDreieck(Point3D pA, Point3D pB, Point3D pC, Point3D p) {
 		if(p == null) return false;
 		if(p.equals(pA) || p.equals(pB) || p.equals(pC)) return true;
 		
@@ -88,14 +92,10 @@ public class Utils {
 		printDebug("Winkelsumme: " + winkelsumme);
 		
 		// Wenn der Punkt innerhalb des Dreiecks ABC ist, ist die WInkelsumme 360� !
-		boolean liegtPunktInDreieck = (Math.abs(winkelsumme-360) <= 1.0E-3);
+		boolean imDreieck = (Math.abs(winkelsumme-360) <= 1.0E-3);
+		printDebug("Punkt liegt im Dreieck: " + imDreieck);	
 		
-		if(liegtPunktInDreieck)
-			printDebug("Punkt liegt im Dreieck! :)");
-		else
-			printDebug("Punkt liegt nicht im Dreieck! :(");		
-		
-		return liegtPunktInDreieck;	
+		return imDreieck;	
 	}
 	
 	private static Point3D getCrossProduct(Point3D v1, Point3D v2) {		
@@ -196,5 +196,60 @@ public class Utils {
 		if(DEBUG) System.out.println(String.valueOf(o));
 	}
 	
-
+	/**
+	 * @param pA - Punkt A des Vierecks
+	 * @param pB - Punkt B des Vierecks
+	 * @param pC - Punkt C des Vierecks
+	 * @param pD - Punkt D des Vierecks
+	 * @param gA - Punkt A der Geraden
+	 * @param gB - Punkt A der Geraden
+	 * @return Point3D - Schnittpunkt mit der Ebene des Vierecks oder <i>null</i>, falls die Gerade parallel zum Viereck liegt.
+	 */
+	public static Point3D getSchnittpunktViereckGerade(Point3D pA, Point3D pB, Point3D pC, Point3D pD, Point3D gA, Point3D gB) {
+		Object[] paramsEbene1 = getEbenengleichung(pA, pB, pC);
+		Object[] paramsEbene2 = getEbenengleichung(pA, pB, pD);
+		Object[] paramsEbene3 = getEbenengleichung(pA, pC, pD);
+		Object[] paramsEbene4 = getEbenengleichung(pB, pC, pD);
+		
+		Point3D[] paramsGerade = getGeradengleichung(gA, gB);
+		
+		Point3D schnittpunkt1 = getIntersectionPoint(paramsEbene1, paramsGerade);
+		Point3D schnittpunkt2 = getIntersectionPoint(paramsEbene2, paramsGerade);
+		Point3D schnittpunkt3 = getIntersectionPoint(paramsEbene3, paramsGerade);
+		Point3D schnittpunkt4 = getIntersectionPoint(paramsEbene4, paramsGerade);
+		
+		printDebug(schnittpunkt1);
+		printDebug(schnittpunkt2);
+		printDebug(schnittpunkt3);
+		printDebug(schnittpunkt4);
+		
+		boolean alleGleich = schnittpunkt1.equals(schnittpunkt2) && schnittpunkt2.equals(schnittpunkt3) && schnittpunkt3.equals(schnittpunkt4);
+		printDebug("alle SChnittpunkte gleich: " + alleGleich);
+		
+		return (alleGleich) ? schnittpunkt1 : null;
+	}
+	
+	/**
+	 * Ueberprueft, ob Punkt <i>p</i> innerhalb des Vierecks <i>ABCD</i> liegt.
+	 * @param pA - Punkt A des Vierecks
+	 * @param pB - Punkt B des Vierecks
+	 * @param pC - Punkt C des Vierecks
+	 * @param pD - Punkt D des Vierecks
+	 * @param p - Punkt zum Ueberpruefen
+	 * @return boolean
+	 */
+	public static boolean liegtPunktImViereck(Point3D pA, Point3D pB, Point3D pC, Point3D pD, Point3D p) {
+		if(p == null) return false;
+		if(p.equals(pA) || p.equals(pB) || p.equals(pC) || p.equals(pD)) return true;
+		
+		boolean punktInDreieck1 = liegtPunktImDreieck(pA, pB, pC, p);
+		boolean punktInDreieck2 = liegtPunktImDreieck(pA, pB, pD, p);
+		boolean punktInDreieck3 = liegtPunktImDreieck(pA, pC, pD, p);
+		boolean punktInDreieck4 = liegtPunktImDreieck(pB, pC, pD, p);
+		
+		boolean imViereck = (punktInDreieck1 || punktInDreieck2 || punktInDreieck3 || punktInDreieck4);
+		printDebug("Punkt liegt im Viereck: " + imViereck);
+		
+		return imViereck;
+	}
 }

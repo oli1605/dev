@@ -6,13 +6,13 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) {		
 //		Utils.DEBUG = true;
 		
-//		berechneWinkel();
-//		liegtPunktInDreieck();
+		berechneWinkel();
+		liegtPunktInDreieck();
 		SchnittpunktGeradeMitDreieck();
+		SchnittpunktViereckGerade();
 	}
 	
 	
@@ -34,6 +34,7 @@ public class Main {
 		double winkelA = Utils.getAngle(p1, p2, p3);
 		
 		System.out.println("winkelA: " + winkelA);
+		System.out.println("===================\n");
 	}
 	
 	private static void liegtPunktInDreieck() {
@@ -56,8 +57,9 @@ public class Main {
 		// Punkt / Schnittpunkt im Dreieck
 		Point3D X = new Point3D(1, 1, 0);
 		
-		boolean imDreieck = Utils.liegtPunktInDreieck(pA, pB, pC, X);
+		boolean imDreieck = Utils.liegtPunktImDreieck(pA, pB, pC, X);
 		System.out.println("Punkt im Dreieck: " + imDreieck);
+		System.out.println("===================\n");
 	}
 	
 	private static void SchnittpunktGeradeMitDreieck() {
@@ -76,8 +78,29 @@ public class Main {
 		System.out.println("Schnittpunkt: " + schnittpunkt);
 		
 		// im Dreieck
-		boolean imDreieck = Utils.liegtPunktInDreieck(pA, pB, pC, schnittpunkt);
-		System.out.println("Punkt im Dreieck: " + imDreieck);		
+		boolean imDreieck = Utils.liegtPunktImDreieck(pA, pB, pC, schnittpunkt);
+		System.out.println("Punkt im Dreieck: " + imDreieck);	
+		System.out.println("===================\n");
+	}
+	
+	private static void SchnittpunktViereckGerade() {
+				
+		// Viereck
+		Point3D pA = new Point3D(0, 0, 0);
+		Point3D pB = new Point3D(2, 0, 0);
+		Point3D pC = new Point3D(2, 2, 0);
+		Point3D pD = new Point3D(0, 2, 0);
+		
+		// Gerade
+		Point3D gA = new Point3D(1, 1, 1);
+		Point3D gB = new Point3D(1, 1, -1);
+		
+		Point3D schnittpunkt = Utils.getSchnittpunktViereckGerade(pA, pB, pC, pD, gA, gB);
+		System.out.println("Schnittpunkt: " + schnittpunkt);
+		
+		boolean imViereck = Utils.liegtPunktImViereck(pA, pB, pC, pD, schnittpunkt);
+		System.out.println("Punkt im Viereck: " + imViereck);
+		System.out.println("===================\n");
 	}
 	
 
