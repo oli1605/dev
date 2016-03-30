@@ -58,7 +58,7 @@ public class Utils {
 	
 	/**
 	 * @param v
-	 * @return Länge/Betrag des Vektors <i>v</i>.
+	 * @return Laenge/Betrag des Vektors <i>v</i>.
 	 */
 	private static double getLength(Point3D v) {
 		double length = Math.sqrt(v.getX()*v.getX() + v.getY()*v.getY() + v.getZ()*v.getZ());
@@ -66,17 +66,16 @@ public class Utils {
 	}
 	
 	/**
-	 * Überprüft, ob Punkt <i>p</i> innerhalb des Dreiecks <i>ABC</i> liegt.
+	 * Ueberprueft, ob Punkt <i>p</i> innerhalb des Dreiecks <i>ABC</i> liegt.
 	 * @param pA - Punkt A des Dreiecks
 	 * @param pB - Punkt B des Dreiecks
 	 * @param pC - Punkt C des Dreiecks
-	 * @param punkt - Punkt zum Überprüfen
+	 * @param punkt - Punkt zum Ueberpruefen
 	 * @return boolean
 	 */
 	public static boolean liegtPunktInDreieck(Point3D pA, Point3D pB, Point3D pC, Point3D p) {
-		if(p == null) {
-			return false;
-		}
+		if(p == null) return false;
+		if(p.equals(pA) || p.equals(pB) || p.equals(pC)) return true;
 		
 		double winkelAPB = getAngle(p, pA, pB);
 		double winkelBPC = getAngle(p, pB, pC);
@@ -88,7 +87,7 @@ public class Utils {
 		printDebug("winkelCPA: " + winkelCPA);	
 		printDebug("Winkelsumme: " + winkelsumme);
 		
-		// Wenn der Punkt innerhalb des Dreiecks ABC ist, ist die WInkelsumme 360° !
+		// Wenn der Punkt innerhalb des Dreiecks ABC ist, ist die WInkelsumme 360ï¿½ !
 		boolean liegtPunktInDreieck = (Math.abs(winkelsumme-360) <= 1.0E-3);
 		
 		if(liegtPunktInDreieck)
