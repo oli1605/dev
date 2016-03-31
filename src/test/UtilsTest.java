@@ -208,7 +208,7 @@ public class UtilsTest {
 	}
 
 	@Test
-	public void equals() {
+	public void Point3DEqualsPoint3D() {
 		Point3D p1 = new Point3D(0, 0, 0);
 		Point3D p2 = new Point3D(0, 0, 0);
 
@@ -262,8 +262,40 @@ public class UtilsTest {
 	}
 	
 	@Test
-	public void GeradeSchneidetViereckAuﬂerhalb() {
-		Utils.DEBUG = true;
+	public void GeradeSchneidetViereck3_komplett() {
+		// Viereck
+		Point3D pA = new Point3D(0, 0, 0);
+		Point3D pB = new Point3D(1, 0, 0);
+		Point3D pC = new Point3D(1, 1, 0);
+		Point3D pD = new Point3D(0, 1, 0);
+		
+		for(double x = -0.5; x <= 1.5; x+=0.01){
+			for(double y = -0.5; y <= 1.5; y+=0.01){
+				x = Math.round(x * 100) / 100.0;
+				y = Math.round(y * 100) / 100.0;
+				
+				// Gerade
+				Point3D gA = new Point3D(x, y, 1);
+				Point3D gB = new Point3D(x, y, -1);
+				
+				Point3D schnittpunkt = Utils.getSchnittpunktViereckGerade(pA, pB, pC, pD, gA, gB);
+				Assert.assertNotNull(schnittpunkt);
+				Assert.assertEquals(x, schnittpunkt.getX(), ERROR);
+				Assert.assertEquals(y, schnittpunkt.getY(), ERROR);
+				Assert.assertEquals(0.0, schnittpunkt.getZ(), ERROR);
+				
+				boolean imViereck = Utils.liegtPunktImViereck(pA, pB, pC, pD, schnittpunkt);
+				if(x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.0)
+					Assert.assertTrue(imViereck);
+				else
+					Assert.assertFalse("x:"+x+" y:"+y, imViereck);
+			}
+		}
+
+	}
+	
+	@Test
+	public void GeradeSchneidetViereckAusserhalb() {
 		// Viereck
 		Point3D pA = new Point3D(0, 0, 0);
 		Point3D pB = new Point3D(2, 0, 0);
@@ -286,7 +318,6 @@ public class UtilsTest {
 	
 	@Test
 	public void GeradeSchneidetViereckAmRand() {
-		Utils.DEBUG = true;
 		// Viereck
 		Point3D pA = new Point3D(0, 0, 0);
 		Point3D pB = new Point3D(2, 0, 0);
@@ -309,7 +340,6 @@ public class UtilsTest {
 	
 	@Test
 	public void GeradeSchneidetViereckInEcke() {
-		Utils.DEBUG = true;
 		// Viereck
 		Point3D pA = new Point3D(0, 0, 0);
 		Point3D pB = new Point3D(2, 0, 0);

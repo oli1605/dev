@@ -206,6 +206,7 @@ public class Utils {
 	 * @return Point3D - Schnittpunkt mit der Ebene des Vierecks oder <i>null</i>, falls die Gerade parallel zum Viereck liegt.
 	 */
 	public static Point3D getSchnittpunktViereckGerade(Point3D pA, Point3D pB, Point3D pC, Point3D pD, Point3D gA, Point3D gB) {
+		//TODO Optimierbar: Theoretisch muss der Schnittpunkt nur 1x berechnet werden, nicht 4x!
 		Object[] paramsEbene1 = getEbenengleichung(pA, pB, pC);
 		Object[] paramsEbene2 = getEbenengleichung(pA, pB, pD);
 		Object[] paramsEbene3 = getEbenengleichung(pA, pC, pD);
@@ -242,14 +243,21 @@ public class Utils {
 		if(p == null) return false;
 		if(p.equals(pA) || p.equals(pB) || p.equals(pC) || p.equals(pD)) return true;
 		
-		boolean punktInDreieck1 = liegtPunktImDreieck(pA, pB, pC, p);
-		boolean punktInDreieck2 = liegtPunktImDreieck(pA, pB, pD, p);
-		boolean punktInDreieck3 = liegtPunktImDreieck(pA, pC, pD, p);
-		boolean punktInDreieck4 = liegtPunktImDreieck(pB, pC, pD, p);
+		boolean punktInDreieck = liegtPunktImDreieck(pA, pB, pC, p);
+		if(punktInDreieck) return true;
+		punktInDreieck = liegtPunktImDreieck(pA, pB, pD, p);
+		if(punktInDreieck) return true;
+		punktInDreieck = liegtPunktImDreieck(pA, pC, pD, p);
+		if(punktInDreieck) return true;
+		punktInDreieck = liegtPunktImDreieck(pB, pC, pD, p);
+		if(punktInDreieck) return true;
 		
-		boolean imViereck = (punktInDreieck1 || punktInDreieck2 || punktInDreieck3 || punktInDreieck4);
-		printDebug("Punkt liegt im Viereck: " + imViereck);
+		printDebug("Punkt liegt im Viereck: " + false);
+		return false;
 		
-		return imViereck;
+//		boolean imViereck = (punktInDreieck1 || punktInDreieck2 || punktInDreieck3 || punktInDreieck4);
+//		printDebug("Punkt liegt im Viereck: " + imViereck);
+//		
+//		return imViereck;
 	}
 }
